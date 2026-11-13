@@ -50,19 +50,34 @@ jobs:
         run: |
           $setup = Get-ChildItem dist\Alifbo-Word-Setup-*.exe | Select-Object -First 1
           Start-Process $setup.FullName -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait
-          $check = @'
-          $o = New-Object -ComObject Alifbo.Connect
-          $xml = $o.GetCustomUI('Microsoft.Word.Document')
-          if ($xml -notmatch 'OnConvert') { throw 'GetCustomUI xato' }
+          # GitHub runner jarayonlari administrator (elevated) bo'lib ishlaydi, elevated jarayonlarda esa
+          # .NET COM shim HKCU dagi (per-user) ro'yxatni e'tiborsiz qoldiradi va 0x80070002 qaytaradi.
+          # Oddiy foydalanuvchida Word elevated emas, shuning uchun bu sozlama faqat CI uchun kerak.
+          foreach ($k in 'HKLM:\SOFTWARE\Microsoft\.NETFramework','HKLM:\SOFTWARE\WOW6432Node\Microsoft\.NETFramework') {
+            Set-ItemProperty $k AlwaysReadHKCRForCLSIDs 1 -Type DWord
+          }
           $lb = (Get-ItemProperty 'HKCU:\Software\Microsoft\Office\Word\Addins\Alifbo.Connect').LoadBehavior
           if ($lb -ne 3) { throw "LoadBehavior=$lb" }
-          "OK ($([IntPtr]::Size * 8)-bit)"
+          # Word kabi native (C++) mijoz orqali tekshiramiz: VBScript ham plaginni mscoree orqali yuklaydi.
+          $check = @'
+          On Error Resume Next
+          Set o = CreateObject("Alifbo.Connect")
+          If Err.Number <> 0 Then
+            WScript.Echo "CreateObject xato: 0x" & Hex(Err.Number) & " " & Err.Description
+            WScript.Quit 1
+          End If
+          xml = o.GetCustomUI("Microsoft.Word.Document")
+          If Err.Number <> 0 Or InStr(xml, "OnConvert") = 0 Then
+            WScript.Echo "GetCustomUI xato: 0x" & Hex(Err.Number)
+            WScript.Quit 1
+          End If
+          WScript.Echo "OK"
           '@
-          Set-Content check.ps1 $check
-          & "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File check.ps1
-          if ($LASTEXITCODE -ne 0) { exit 1 }
-          & "$env:SystemRoot\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File check.ps1
-          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Set-Content check.vbs $check
+          foreach ($dir in 'System32','SysWOW64') {
+            & "$env:SystemRoot\$dir\cscript.exe" //nologo check.vbs
+            if ($LASTEXITCODE -ne 0) { exit 1 }
+          }
 
       - uses: actions/upload-artifact@v4
         with:
