@@ -23,9 +23,9 @@ namespace Alifbo.Word
             "<group id=\"AlifboGroup\" label=\"Alifbo\" insertAfterMso=\"GroupEditing\">" +
             "<button id=\"AlifboConvert\" size=\"large\" imageMso=\"ReplaceDialog\" keytip=\"YL\"" +
             " label=\"Yangi lotinga\"" +
-            " screentip=\"Yangi lotin alifbosiga oʻgirish\"" +
-            " supertip=\"Bir bosishda: matn belgilangan boʻlsa — faqat oʻsha qism, aks holda butun hujjat " +
-            "eski lotin yoki kirilldan yangi lotinga (ö, ğ, ş, ç) oʻgiriladi. " +
+            " screentip=\"Yangi lotin alifbosiga o\u02BBgirish\"" +
+            " supertip=\"Bir bosishda: matn belgilangan bo\u02BBlsa \u2014 faqat o\u02BBsha qism, aks holda butun hujjat " +
+            "eski lotin yoki kirilldan yangi lotinga (\u00F6, \u011F, \u015F, \u00E7) o\u02BBgiriladi. " +
             "Formatlar saqlanadi. Bekor qilish: Ctrl+Z.\"" +
             " onAction=\"OnConvert\"/>" +
             "</group></tab></tabs></ribbon></customUI>";
@@ -72,7 +72,7 @@ namespace Alifbo.Word
             catch (Exception ex)
             {
                 MessageBox.Show("Xatolik yuz berdi: " + ex.Message +
-                                "\r\nQilingan oʻzgarishlarni Ctrl+Z bilan bekor qilishingiz mumkin.",
+                                "\r\nQilingan o\u02BBzgarishlarni Ctrl+Z bilan bekor qilishingiz mumkin.",
                                 "Alifbo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally

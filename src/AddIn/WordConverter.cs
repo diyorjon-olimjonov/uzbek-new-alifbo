@@ -37,7 +37,7 @@ namespace Alifbo.Word
         {
             if ((int)_app.Documents.Count == 0)
             {
-                MessageBox.Show("Ochiq hujjat yoʻq.", "Alifbo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Ochiq hujjat yo\u02BBq.", "Alifbo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             dynamic doc = _app.ActiveDocument;
@@ -56,7 +56,7 @@ namespace Alifbo.Word
             try
             {
                 undo = _app.UndoRecord;              // Word 2010+
-                undo.StartCustomRecord("Yangi lotinga oʻgirish");
+                undo.StartCustomRecord("Yangi lotinga o\u02BBgirish");
             }
             catch
             {
@@ -88,10 +88,10 @@ namespace Alifbo.Word
             }
 
             string msg = _changed == 0
-                ? "Alifbo: oʻzgartiriladigan matn topilmadi."
-                : string.Format("Alifbo: {0} ta belgi yangi lotinga oʻgirildi ({1:0.0} s). Bekor qilish: Ctrl+Z.",
+                ? "Alifbo: o\u02BBzgartiriladigan matn topilmadi."
+                : string.Format("Alifbo: {0} ta belgi yangi lotinga o\u02BBgirildi ({1:0.0} s). Bekor qilish: Ctrl+Z.",
                                 _changed, timer.Elapsed.TotalSeconds);
-            if (_skipped > 0) msg += " " + _skipped + " ta joy oʻtkazib yuborildi.";
+            if (_skipped > 0) msg += " " + _skipped + " ta joy o\u02BBtkazib yuborildi.";
             try { _app.StatusBar = msg; } catch { }
         }
 

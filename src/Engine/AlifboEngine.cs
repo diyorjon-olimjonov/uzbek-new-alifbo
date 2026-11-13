@@ -46,8 +46,8 @@ namespace Alifbo
             }
         }
 
-        private const char OkinaMod = 'ʻ'; // o' / g' belgisi
-        private const char Tutuq = 'ʼ';    // tutuq belgisi
+        private const char OkinaMod = '\u02BB'; // o' / g' belgisi
+        private const char Tutuq = '\u02BC';    // tutuq belgisi
 
         private static readonly Dictionary<char, char> LowerMap = new Dictionary<char, char>();
         private static readonly Dictionary<char, char> UpperMap = new Dictionary<char, char>();
@@ -60,26 +60,26 @@ namespace Alifbo
         static AlifboEngine()
         {
             for (int i = 0; i < 26; i++) Pair((char)('a' + i), (char)('A' + i));
-            Pair('ö', 'Ö'); // o umlaut
-            Pair('ğ', 'Ğ'); // g breve
-            Pair('ş', 'Ş'); // s cedilla
-            Pair('ç', 'Ç'); // c cedilla
-            Pair('ș', 'Ș'); // s comma (o'xshash belgi)
+            Pair('\u00F6', '\u00D6'); // o umlaut
+            Pair('\u011F', '\u011E'); // g breve
+            Pair('\u015F', '\u015E'); // s cedilla
+            Pair('\u00E7', '\u00C7'); // c cedilla
+            Pair('\u0219', '\u0218'); // s comma (o'xshash belgi)
             for (int i = 0; i < 32; i++) Pair((char)(0x430 + i), (char)(0x410 + i));
-            Pair('ё', 'Ё'); // yo
-            Pair('ў', 'Ў'); // o' (kirill)
-            Pair('қ', 'Қ'); // q
-            Pair('ғ', 'Ғ'); // g'
-            Pair('ҳ', 'Ҳ'); // h
+            Pair('\u0451', '\u0401'); // yo
+            Pair('\u045E', '\u040E'); // o' (kirill)
+            Pair('\u049B', '\u049A'); // q
+            Pair('\u0493', '\u0492'); // g'
+            Pair('\u04B3', '\u04B2'); // h
 
-            Cyr('а', "a"); Cyr('б', "b"); Cyr('в', "v"); Cyr('г', "g");
-            Cyr('д', "d"); Cyr('ж', "j"); Cyr('з', "z"); Cyr('и', "i");
-            Cyr('й', "y"); Cyr('к', "k"); Cyr('л', "l"); Cyr('м', "m");
-            Cyr('н', "n"); Cyr('о', "o"); Cyr('п', "p"); Cyr('р', "r");
-            Cyr('с', "s"); Cyr('т', "t"); Cyr('у', "u"); Cyr('ф', "f");
-            Cyr('х', "x"); Cyr('ч', "ç"); Cyr('ш', "ş");
-            Cyr('ы', "i"); Cyr('э', "e"); Cyr('ў', "ö");
-            Cyr('қ', "q"); Cyr('ғ', "ğ"); Cyr('ҳ', "h");
+            Cyr('\u0430', "a"); Cyr('\u0431', "b"); Cyr('\u0432', "v"); Cyr('\u0433', "g");
+            Cyr('\u0434', "d"); Cyr('\u0436', "j"); Cyr('\u0437', "z"); Cyr('\u0438', "i");
+            Cyr('\u0439', "y"); Cyr('\u043A', "k"); Cyr('\u043B', "l"); Cyr('\u043C', "m");
+            Cyr('\u043D', "n"); Cyr('\u043E', "o"); Cyr('\u043F', "p"); Cyr('\u0440', "r");
+            Cyr('\u0441', "s"); Cyr('\u0442', "t"); Cyr('\u0443', "u"); Cyr('\u0444', "f");
+            Cyr('\u0445', "x"); Cyr('\u0447', "\u00E7"); Cyr('\u0448', "\u015F");
+            Cyr('\u044B', "i"); Cyr('\u044D', "e"); Cyr('\u045E', "\u00F6");
+            Cyr('\u049B', "q"); Cyr('\u0493', "\u011F"); Cyr('\u04B3', "h");
         }
 
         private static void Pair(char lower, char upper)
@@ -97,7 +97,7 @@ namespace Alifbo
         /// <param name="exceptions">Qo'shimcha "kalit -> qiymat" istisnolari.</param>
         public AlifboEngine(IEnumerable<string> protectedTerms = null, IDictionary<string, string> exceptions = null)
         {
-            const string a = "ʼ";
+            const string a = "\u02BC";
             // Kutubxonadagi istisnolar (data/exceptions.json)
             AddException("ashob", "as" + a + "hob");
             AddException("Ashob", "As" + a + "hob");
@@ -194,8 +194,8 @@ namespace Alifbo
             int prev = -1;
             foreach (char c in s)
             {
-                if (c >= 'Ѐ' && c <= 'ӿ') return true;
-                if (c == 'ș' || c == 'Ș') return true;
+                if (c >= '\u0400' && c <= '\u04FF') return true;
+                if (c == '\u0219' || c == '\u0218') return true;
                 if (IsApos(c)) return true;
                 if ((c == 'h' || c == 'H') && (prev == 's' || prev == 'S' || prev == 'c' || prev == 'C')) return true;
                 prev = c;
@@ -237,8 +237,8 @@ namespace Alifbo
         {
             switch (c)
             {
-                case 'ʻ': case 'ʼ': case '\'': case '‘': case '’':
-                case '`': case '´': case '′': case '＇':
+                case '\u02BB': case '\u02BC': case '\'': case '\u2018': case '\u2019':
+                case '`': case '\u00B4': case '\u2032': case '\uFF07':
                     return true;
             }
             return false;
@@ -294,11 +294,11 @@ namespace Alifbo
         private static bool IsSpaceJs(char c)
         {
             if (c >= '\u0009' && c <= '\u000D') return true;
-            if (c >= ' ' && c <= ' ') return true;
+            if (c >= '\u2000' && c <= '\u200A') return true;
             switch (c)
             {
-                case ' ': case ' ': case ' ': case ' ': case ' ':
-                case ' ': case ' ': case '　': case '﻿':
+                case ' ': case '\u00A0': case '\u1680': case '\u2028': case '\u2029':
+                case '\u202F': case '\u205F': case '\u3000': case '\uFEFF':
                     return true;
             }
             return false;
@@ -450,8 +450,8 @@ namespace Alifbo
             for (int i = 0; i < b.N; i++)
             {
                 char raw = b.C[i];
-                if (raw == 'ș') raw = 'ş';
-                if (raw == 'Ș') raw = 'Ş';
+                if (raw == '\u0219') raw = '\u015F';
+                if (raw == '\u0218') raw = '\u015E';
                 if (IsApos(raw))
                     b.C[i] = (prev == 'o' || prev == 'O' || prev == 'g' || prev == 'G') ? OkinaMod : Tutuq;
                 else
@@ -547,10 +547,10 @@ namespace Alifbo
                         EmitCased(c, i, prevL == -1 || prevL == 0x446 ? "s" : "ts", d);
                         break;
                     case 0x449: // shch
-                        EmitCased(c, i, "şç", d);
+                        EmitCased(c, i, "\u015F\u00E7", d);
                         break;
                     case 0x44A: // qattiq belgi
-                        EmitCased(c, i, "ʼ", d);
+                        EmitCased(c, i, "\u02BC", d);
                         break;
                     case 0x44C: // yumshoq belgi
                         switch (LetterAt(c, i + 1))
@@ -592,7 +592,7 @@ namespace Alifbo
                 int nx = c.At(i + 1);
                 if ((lo == 'o' || lo == 'g') && nx == OkinaMod)
                 {
-                    char r = lo == 'o' ? 'ö' : 'ğ';
+                    char r = lo == 'o' ? '\u00F6' : '\u011F';
                     d.Push(IsUp(ch) ? Up(r) : r, c.O[i]);
                     i += 2;
                 }
@@ -605,12 +605,12 @@ namespace Alifbo
                 }
                 else if (lo == 's' && Low(nx) == 'h')
                 {
-                    d.Push(IsUp(ch) ? 'Ş' : 'ş', c.O[i]);
+                    d.Push(IsUp(ch) ? '\u015E' : '\u015F', c.O[i]);
                     i += 2;
                 }
                 else if (lo == 'c' && Low(nx) == 'h')
                 {
-                    d.Push(IsUp(ch) ? 'Ç' : 'ç', c.O[i]);
+                    d.Push(IsUp(ch) ? '\u00C7' : '\u00E7', c.O[i]);
                     i += 2;
                 }
                 else if (lo == 'n' && Low(nx) == 'g')

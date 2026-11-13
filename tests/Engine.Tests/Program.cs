@@ -50,11 +50,11 @@ internal static class Program
 
         // Foydalanuvchi sozlamalari
         var custom = new AlifboEngine(new[] { "Microsoft" },
-            new System.Collections.Generic.Dictionary<string, string> { { "mushaf", "musʼhaf" } });
-        Check(custom.Convert("Microsoft shahar mushaf"), "Microsoft şahar musʼhaf", ref total, ref failed);
+            new System.Collections.Generic.Dictionary<string, string> { { "mushaf", "mus\u02BChaf" } });
+        Check(custom.Convert("Microsoft shahar mushaf"), "Microsoft \u015Fahar mus\u02BChaf", ref total, ref failed);
         // Maska: belgilangan belgilar o'zgarmaydi
         var mask = new bool[] { true, true, false, false };
-        Check(string.Concat(engine.Pieces("shsh", mask)), "shş", ref total, ref failed);
+        Check(string.Concat(engine.Pieces("shsh", mask)), "sh\u015F", ref total, ref failed);
 
         Console.WriteLine($"{total - failed}/{total} passed");
         return failed == 0 ? 0 : 1;
