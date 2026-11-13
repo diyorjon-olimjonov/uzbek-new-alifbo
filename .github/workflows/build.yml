@@ -1,0 +1,76 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Dvigatel sinovlari (asl alifbo natijalari bilan)
+        run: dotnet run --project tests/Engine.Tests -c Release
+
+      - name: Plaginni yig'ish
+        run: dotnet build src/AddIn/Alifbo.Word.csproj -c Release
+
+      - name: Versiya
+        id: ver
+        shell: pwsh
+        run: |
+          $v = '1.0.0'
+          if ('${{ github.ref }}' -like 'refs/tags/v*') { $v = '${{ github.ref_name }}'.Substring(1) }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+
+      - name: O'rnatuvchini yig'ish
+        shell: pwsh
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ steps.ver.outputs.version }}" installer\Alifbo.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: O'rnatish va COM ro'yxatini tekshirish (32 va 64 bit)
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem dist\Alifbo-Word-Setup-*.exe | Select-Object -First 1
+          Start-Process $setup.FullName -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait
+          $check = @'
+          $o = New-Object -ComObject Alifbo.Connect
+          $xml = $o.GetCustomUI('Microsoft.Word.Document')
+          if ($xml -notmatch 'OnConvert') { throw 'GetCustomUI xato' }
+          $lb = (Get-ItemProperty 'HKCU:\Software\Microsoft\Office\Word\Addins\Alifbo.Connect').LoadBehavior
+          if ($lb -ne 3) { throw "LoadBehavior=$lb" }
+          "OK ($([IntPtr]::Size * 8)-bit)"
+          '@
+          Set-Content check.ps1 $check
+          & "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File check.ps1
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          & "$env:SystemRoot\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File check.ps1
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Alifbo-Word-Setup
+          path: dist/*.exe
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.exe

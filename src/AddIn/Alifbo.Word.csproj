@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Word uchun COM plagin. .NET Framework 4.0 ga mo'ljallangan: Windows 7 dan 11 gacha
+    o'rnatilgan har qanday .NET 4.x da ishlaydi. AnyCPU - 32 va 64 bitli Office uchun bitta DLL.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net40</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Alifbo.Word</AssemblyName>
+    <RootNamespace>Alifbo.Word</RootNamespace>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Alifbo</Company>
+    <Product>Alifbo - Word uchun yangi lotin</Product>
+    <Description>O'zbek matnini eski lotin va kirilldan yangi lotin alifbosiga o'giradigan Word plagini</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Engine\AlifboEngine.cs" Link="AlifboEngine.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+</Project>
