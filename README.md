@@ -20,8 +20,11 @@ Word'ning **Home** lentasiga **Alifbo → Yangi lotinga** tugmasini qoʻshadi. B
 ## Oʻrnatish
 
 1. [Releases](../../releases) boʻlimidan `Alifbo-Word-Setup-x.y.z.exe` ni yuklab oling.
-2. Ishga tushiring: **Keyingi → Oʻrnatish**. Administrator huquqi kerak emas.
+   Release hali boʻlmasa: [Actions](../../actions/workflows/build.yml) → oxirgi yashil ishga tushirish → **Artifacts** → `Alifbo-Word-Setup` (zip ichida `.exe`).
+2. Ishga tushiring: **Keyingi → Oʻrnatish**. Administrator huquqi kerak emas. Plagin faqat oʻrnatgan foydalanuvchi uchun oʻrnatiladi.
 3. Word'ni oching (ochiq boʻlsa, qayta oching).
+
+> Word'ni **administrator sifatida** (“Run as administrator”) ochmang: Windows xavfsizlik sababli bunday jarayonlarda joriy foydalanuvchi uchun oʻrnatilgan plaginlarni yuklamaydi.
 
 > Windows “Noma'lum nashriyotchi” (SmartScreen) deb ogohlantirsa: **Batafsil → Baribir ishga tushirish**. Ogohlantirish oʻrnatuvchi kod imzolash sertifikati bilan imzolanmaguncha chiqadi.
 
