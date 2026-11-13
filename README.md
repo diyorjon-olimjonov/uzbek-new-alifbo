@@ -41,6 +41,8 @@ Sozlamalar `HKEY_CURRENT_USER\Software\Alifbo` reestr kalitida saqlanadi:
 
 - **Word → File → Options → Add-ins → Manage: COM Add-ins → Go…** oynasida **Alifbo – yangi lotin** belgilanganini tekshiring.
 - U **Disabled Items** roʻyxatida boʻlsa, oʻsha yerdan yoqing.
+- Word administrator sifatida ochilmaganini tekshiring (yuqoriga qarang).
+- Plagin Word'ni ishlatadigan foydalanuvchi hisobida oʻrnatilgan boʻlishi kerak.
 - Tashkilotda administrator plaginlarni taqiqlagan boʻlishi mumkin. Bunda IT boʻlimiga murojaat qiling.
 
 ## Ishlab chiquvchilar uchun
@@ -54,6 +56,8 @@ installer/Alifbo.iss         Inno Setup oʻrnatuvchisi (joriy foydalanuvchi uchu
 ```
 
 Plagin Office PIA'larsiz yozilgan: COM interfeyslari oʻzida eʼlon qilingan, Word bilan esa `dynamic` orqali ishlaydi. Shu tufayli bitta `net40` DLL barcha Word versiyalarida ishlaydi.
+
+CI'dagi COM tekshiruvi plaginni `cscript` (Word kabi native mijoz) orqali 32 va 64 bitda yuklaydi. GitHub runner'lari administrator sifatida ishlagani uchun tekshiruvdan oldin `AlwaysReadHKCRForCLSIDs=1` oʻrnatiladi. Busiz elevated jarayon HKCU dagi COM roʻyxatini koʻrmaydi (`0x80070002`). Bu sozlama faqat CI uchun, foydalanuvchilarga kerak emas.
 
 Yangi versiya chiqarish uchun `v1.0.0` kabi teg qoʻyiladi. GitHub Actions oʻrnatuvchini yigʻib, Releases boʻlimiga joylaydi.
 
