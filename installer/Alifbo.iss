@@ -8,7 +8,7 @@
 #ifndef BinDir
   #define BinDir "..\src\AddIn\bin\Release\net40"
 #endif
-#define ClsId "{5D920E66-8009-4A2B-8956-325639112835}"
+#define ClsId "{{5D920E66-8009-4A2B-8956-325639112835}"
 #define ProgId "Alifbo.Connect"
 #define AsmName "Alifbo.Word, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
 
